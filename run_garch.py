@@ -22,7 +22,17 @@ logger = logging.getLogger("garch_pipeline")
 OUT = Path("outputs")
 
 
+def _configure_console() -> None:
+    """Keep Unicode status output from crashing on legacy Windows consoles."""
+    if hasattr(sys.stdout, "reconfigure"):
+        try:
+            sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, OSError):
+            pass
+
+
 def main(args):
+    _configure_console()
     sys.path.insert(0, "src")
     from garch.data         import download, log_returns, synthetic_prices
     from garch.models.garch import fit_all, compare_models
@@ -56,7 +66,9 @@ def main(args):
 
     # ── Walk-forward forecast evaluation ──────────────────────────────
     logger.info("Running walk-forward evaluation...")
-    summary, wf_results = compare_forecasts(rets, train_size=args.train_size)
+    summary, wf_results = compare_forecasts(
+        rets, train_size=args.train_size, evaluation_step=args.evaluation_step
+    )
 
     print("\n┌─ Walk-Forward Forecast Metrics ────────────────────────")
     print(summary[["MSE","MAE","RMSE","QLIKE"]].round(8).to_string())
@@ -81,7 +93,7 @@ def main(args):
              None, var_99, kupiec, args.ticker, OUT)
     summary.to_csv(OUT / "tables" / "forecast_comparison.csv")
     model_table.to_csv(OUT / "tables" / "model_selection.csv")
-    pd.Series({k: v["log_likelihood"] for k, v in results.items()
+    pd.Series({k: v.log_likelihood for k, v in results.items()
                if v is not None}).to_csv(OUT / "tables" / "log_likelihoods.csv")
 
     logger.info("="*60)
@@ -95,5 +107,11 @@ if __name__ == "__main__":
     p.add_argument("--start",      default="2010-01-01")
     p.add_argument("--end",        default=None)
     p.add_argument("--train-size", type=int, default=252)
+    p.add_argument(
+        "--evaluation-step",
+        type=int,
+        default=1,
+        help="Evaluate every Nth observation (larger values make quick demos faster)",
+    )
     p.add_argument("--offline",    action="store_true")
     main(p.parse_args())

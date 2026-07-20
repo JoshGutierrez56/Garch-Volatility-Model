@@ -1,0 +1,4 @@
+Model,Log-Lik,AIC,BIC,Converged,N Obs,Best AIC,Best BIC
+"GARCH(1,1)",2173.54,-4341.07,-4325.0,True,1565,False,True
+GJR-GARCH,2174.7,-4341.41,-4319.98,True,1565,True,False
+EGARCH,2172.05,-4336.1,-4314.67,True,1565,False,False
