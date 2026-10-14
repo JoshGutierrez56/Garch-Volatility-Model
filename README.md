@@ -1,150 +1,27 @@
-# GARCH Volatility Forecasting
-### From-Scratch MLE · HAR-RV · Walk-Forward QLIKE · VaR Backtesting
+# GARCH Volatility Modeling
 
-[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+**Inspect how a return shock changes the next risk estimate.**
 
----
+This research prototype explores GARCH(1,1), GJR-GARCH, EGARCH and HAR-RV, with explicit Gaussian likelihood code in the preserved source archive. The bounded public exhibit below isolates a mechanism that can be verified directly. It does not establish investment performance or forecast superiority.
 
-## What This Is
+[Interactive portfolio exhibit](https://joshgutierrez56.github.io/#project-garch-volatility) · [Equations and parameters](docs/NEWS_IMPACT.md) · [Exact exhibit data](docs/exhibit/news-impact.json)
 
-Three GARCH family models implemented from scratch using maximum likelihood
-estimation (scipy L-BFGS-B) — no `arch` library dependency. The math is fully
-exposed and tested.
+![Illustrative GARCH and GJR news-impact curves](docs/exhibit/news-impact.png)
 
-Paired with a HAR-RV model and a rigorous walk-forward QLIKE forecast
-evaluation framework. Volatility forecasting is the entry point for every
-systematic risk model, VaR calculation, and options pricing system at
-quantitative asset managers.
+## What the exhibit shows
 
----
+Both models start from 20% annualized volatility. GARCH responds identically to equal positive and negative shocks. With a positive negative-shock coefficient, GJR responds more strongly to a loss. The parameters are specified, not estimated. A plausible mechanism is not proof of better forecasting.
 
-## Models
+Install Matplotlib, then run `python scripts/build_news_impact_exhibit.py` to rebuild the 41-scenario chart and run four independent arithmetic checks. [Methodology](docs/NEWS_IMPACT.md) distinguishes conditional volatility from losses, VaR, and returns.
 
-### GARCH(1,1)  · Bollerslev (1986)
-```
-σ²_t = ω + α·ε²_{t-1} + β·σ²_{t-1}
-```
-Constraints: ω > 0, α ≥ 0, β ≥ 0, α + β < 1  
-Unconditional variance: σ̄² = ω / (1 − α − β)  
-h-step forecast reverts to σ̄² at rate (α+β)^h
+## Source and validation boundary
 
-### GJR-GARCH  · Glosten, Jagannathan & Runkle (1993)
-```
-σ²_t = ω + (α + γ·𝟙[ε_{t-1}<0])·ε²_{t-1} + β·σ²_{t-1}
-```
-γ > 0 → leverage effect: negative shocks raise volatility more than positive.
-Captures the well-documented asymmetry in equity return volatility.
+The original [garch_volatility.zip](garch_volatility.zip) is preserved. It contains the model implementations, tests, chart functions, and legacy pipeline. The root CLI requires the archive's source package; the archive is not a self-contained installed package merely because the root runner exists.
 
-### EGARCH  · Nelson (1991)
-```
-ln(σ²_t) = ω + α(|z_{t-1}| − E[|z|]) + γ·z_{t-1} + β·ln(σ²_{t-1})
-```
-Works in log space — no positivity constraints needed.  
-γ < 0 → leverage effect.  
-E[|z|] = √(2/π) ≈ 0.7979 for standard normal.
+The **legacy full-pipeline forecast rankings are not validated results**. Audit findings include a one-day realized-variance target calculated from a one-observation variance (zero), missing EGARCH forecasting, a next-step forecast that omits the latest realized shock, and in-sample rather than held-out VaR evaluation. The former placeholder ranking has been withdrawn from this README. Do not use those legacy outputs to select a model. The bounded news-impact exhibit does not depend on those paths.
 
-### HAR-RV  · Corsi (2009)
-```
-RV_{t+1} = α + β_D·RV_t + β_W·RV̄_{t-4:t} + β_M·RV̄_{t-21:t} + ε
-```
-Captures heterogeneity of trader horizons (daily/weekly/monthly).
-Despite being simple OLS, typically outperforms GARCH on multi-day horizons
-because it directly uses observable realised variance.
-
----
-
-## Forecast Evaluation
-
-Walk-forward expanding window. Key metric: **QLIKE loss** (Patton 2011):
-
-```
-QLIKE_t = ln(σ̂²_t) + RV_t / σ̂²_t
-```
-
-QLIKE is the volatility researcher's standard loss function because it:
-- Is consistent with the Gaussian likelihood
-- Penalises under-forecasting more than over-forecasting
-- Is robust to the choice of RV proxy
-
-**Live results (SPY, 2010–2024, synthetic):**
-
-| Model | QLIKE | RMSE | Rank |
-|-------|-------|------|------|
-| GARCH(1,1) | lowest | — | 1st |
-| GJR-GARCH | +0.001 | — | 2nd |
-| EGARCH | +0.002 | — | 3rd |
-| HAR-RV | competitive at 5-21d | best at 22d+ | mixed |
-
----
-
-## Repository Structure
-
-```
-garch-volatility/
-├── run_garch.py               ← CLI entry point
-├── src/garch/
-│   ├── data.py                ← yfinance download + synthetic fallback
-│   └── models/
-│       ├── garch.py           ← GARCH(1,1), GJR-GARCH, EGARCH from scratch
-│       ├── har_rv.py          ← HAR-RV via OLS + walk-forward evaluation
-│       └── forecast.py        ← Model comparison + Kupiec VaR backtest
-├── charts.py                  ← 6 publication-quality figures
-└── tests/
-    └── test_garch.py          ← 10 tests, no internet required
-```
-
----
-
-## Setup & Usage
-
-```bash
-pip install -r requirements.txt
-
-# Full pipeline on SPY (downloads via yfinance)
-python run_garch.py --ticker SPY
-
-# Offline demo with synthetic GARCH(1,1) data
-python run_garch.py --ticker SPY --offline
-
-# Custom ticker and date range
-python run_garch.py --ticker NVDA --start 2018-01-01
-```
-
-**Tests (no API keys needed):**
-```bash
-python tests/test_garch.py    # 10 passed | 0 failed
-```
-
----
-
-## Key Implementation Details
-
-**MLE from scratch** — no `arch`, `statsmodels`, or `pmdarima` dependency.
-The negative log-likelihood is minimised directly:
-
-```python
-ℓ(θ) = -½ Σ_t [ln(2π) + ln(σ²_t) + ε²_t/σ²_t]
-```
-
-This makes the optimisation fully transparent and easy to extend.
-
-**Numerical stability** — all models floor σ² at 1e-8 and EGARCH clips the
-exponent to prevent overflow. Stationarity constraints are enforced via
-penalty in the objective.
-
-**VaR backtest** — Kupiec (1995) Proportion of Failures test with
-MacKinnon χ²(1) critical values at 1% and 5%.
-
----
+A full research release must correct forecast timing and targets, handle optimizer failures explicitly, compare models on common observations, reconcile VaR coverage, and record data provenance before making empirical claims.
 
 ## References
 
-| Reference | Applied In |
-|-----------|-----------|
-| Bollerslev (1986) — *Generalized Autoregressive Conditional Heteroskedasticity* | GARCH(1,1) |
-| Glosten, Jagannathan & Runkle (1993) — *On the Relation Between Expected Return and Volatility* | GJR-GARCH |
-| Nelson (1991) — *Conditional Heteroskedasticity in Asset Returns: A New Approach* | EGARCH |
-| Corsi (2009) — *A Simple Approximate Long-Memory Model of Realized Volatility* | HAR-RV |
-| Patton (2011) — *Volatility Forecast Comparison Using Imperfect Volatility Proxies* | QLIKE loss |
-| Kupiec (1995) — *Techniques for Verifying the Accuracy of Risk Measurement Models* | VaR backtest |
+Bollerslev (1986), GARCH; Glosten, Jagannathan and Runkle (1993), asymmetric conditional volatility; Nelson (1991), EGARCH; Corsi (2009), HAR-RV; Patton (2011), volatility forecast comparison; Kupiec (1995), unconditional VaR coverage.

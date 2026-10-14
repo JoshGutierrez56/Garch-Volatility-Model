@@ -1,0 +1,224 @@
+{
+  "scope": "Illustrative parameter comparison; no estimation or market-data result",
+  "source": "garch_volatility.zip: garch-volatility/src/garch/charts.py fig2_news_impact",
+  "prior_annual_volatility": 0.2,
+  "annualization": 252,
+  "garch": {
+    "omega": 7.936507936507936e-06,
+    "alpha": 0.1,
+    "beta": 0.85
+  },
+  "gjr": {
+    "omega": 7.936507936507936e-06,
+    "alpha": 0.05,
+    "gamma": 0.1,
+    "beta": 0.85
+  },
+  "rows": [
+    {
+      "shock_pct": -5.0,
+      "garch_vol_pct": 31.46426544510455,
+      "gjr_vol_pct": 36.12478373637689
+    },
+    {
+      "shock_pct": -4.75,
+      "garch_vol_pct": 30.472528611849725,
+      "gjr_vol_pct": 34.826175500620224
+    },
+    {
+      "shock_pct": -4.5,
+      "garch_vol_pct": 29.50084744545485,
+      "gjr_vol_pct": 33.54772719574308
+    },
+    {
+      "shock_pct": -4.25,
+      "garch_vol_pct": 28.55126967404427,
+      "gjr_vol_pct": 32.29183333290323
+    },
+    {
+      "shock_pct": -4.0,
+      "garch_vol_pct": 27.626074639731215,
+      "gjr_vol_pct": 31.061229853307488
+    },
+    {
+      "shock_pct": -3.75,
+      "garch_vol_pct": 26.72779452180819,
+      "gjr_vol_pct": 29.859043856091578
+    },
+    {
+      "shock_pct": -3.5,
+      "garch_vol_pct": 25.85923432741194,
+      "gjr_vol_pct": 28.688848007544678
+    },
+    {
+      "shock_pct": -3.25,
+      "garch_vol_pct": 25.023488965370117,
+      "gjr_vol_pct": 27.5547182892513
+    },
+    {
+      "shock_pct": -3.0,
+      "garch_vol_pct": 24.22395508582362,
+      "gjr_vol_pct": 26.461292485439934
+    },
+    {
+      "shock_pct": -2.75,
+      "garch_vol_pct": 23.464334637913772,
+      "gjr_vol_pct": 25.413824977755713
+    },
+    {
+      "shock_pct": -2.5,
+      "garch_vol_pct": 22.748626332154654,
+      "gjr_vol_pct": 24.418230894149563
+    },
+    {
+      "shock_pct": -2.25,
+      "garch_vol_pct": 22.081100516052185,
+      "gjr_vol_pct": 23.481109428644977
+    },
+    {
+      "shock_pct": -2.0,
+      "garch_vol_pct": 21.46625258399798,
+      "gjr_vol_pct": 22.609732417700126
+    },
+    {
+      "shock_pct": -1.75,
+      "garch_vol_pct": 20.908730234043386,
+      "gjr_vol_pct": 21.81198065284306
+    },
+    {
+      "shock_pct": -1.5,
+      "garch_vol_pct": 20.4132310034448,
+      "gjr_vol_pct": 21.096208190099
+    },
+    {
+      "shock_pct": -1.25,
+      "garch_vol_pct": 19.984368891711345,
+      "gjr_vol_pct": 20.47101609593427
+    },
+    {
+      "shock_pct": -1.0,
+      "garch_vol_pct": 19.62651268055535,
+      "gjr_vol_pct": 19.944924166313594
+    },
+    {
+      "shock_pct": -0.75,
+      "garch_vol_pct": 19.343603593953222,
+      "gjr_vol_pct": 19.52594427934281
+    },
+    {
+      "shock_pct": -0.5,
+      "garch_vol_pct": 19.138965489283898,
+      "gjr_vol_pct": 19.221082175569617
+    },
+    {
+      "shock_pct": -0.25,
+      "garch_vol_pct": 19.015125558354853,
+      "gjr_vol_pct": 19.03582149527569
+    },
+    {
+      "shock_pct": 0.0,
+      "garch_vol_pct": 18.973665961010276,
+      "gjr_vol_pct": 18.973665961010276
+    },
+    {
+      "shock_pct": 0.25,
+      "garch_vol_pct": 19.015125558354853,
+      "gjr_vol_pct": 18.99440707155662
+    },
+    {
+      "shock_pct": 0.5,
+      "garch_vol_pct": 19.138965489283898,
+      "gjr_vol_pct": 19.056494955788697
+    },
+    {
+      "shock_pct": 0.75,
+      "garch_vol_pct": 19.343603593953222,
+      "gjr_vol_pct": 19.15952765597315
+    },
+    {
+      "shock_pct": 1.0,
+      "garch_vol_pct": 19.62651268055535,
+      "gjr_vol_pct": 19.3028495305745
+    },
+    {
+      "shock_pct": 1.25,
+      "garch_vol_pct": 19.984368891711345,
+      "gjr_vol_pct": 19.48557158514987
+    },
+    {
+      "shock_pct": 1.5,
+      "garch_vol_pct": 20.4132310034448,
+      "gjr_vol_pct": 19.70659787989799
+    },
+    {
+      "shock_pct": 1.75,
+      "garch_vol_pct": 20.908730234043386,
+      "gjr_vol_pct": 19.96465627051966
+    },
+    {
+      "shock_pct": 2.0,
+      "garch_vol_pct": 21.46625258399798,
+      "gjr_vol_pct": 20.25833161936096
+    },
+    {
+      "shock_pct": 2.25,
+      "garch_vol_pct": 22.081100516052185,
+      "gjr_vol_pct": 20.586099679152436
+    },
+    {
+      "shock_pct": 2.5,
+      "garch_vol_pct": 22.748626332154654,
+      "gjr_vol_pct": 20.946360065653412
+    },
+    {
+      "shock_pct": 2.75,
+      "garch_vol_pct": 23.464334637913772,
+      "gjr_vol_pct": 21.337467047426227
+    },
+    {
+      "shock_pct": 3.0,
+      "garch_vol_pct": 24.22395508582362,
+      "gjr_vol_pct": 21.757757237362497
+    },
+    {
+      "shock_pct": 3.25,
+      "garch_vol_pct": 25.023488965370117,
+      "gjr_vol_pct": 22.205573624655592
+    },
+    {
+      "shock_pct": 3.5,
+      "garch_vol_pct": 25.85923432741194,
+      "gjr_vol_pct": 22.67928570303748
+    },
+    {
+      "shock_pct": 3.75,
+      "garch_vol_pct": 26.72779452180819,
+      "gjr_vol_pct": 23.177305710543667
+    },
+    {
+      "shock_pct": 4.0,
+      "garch_vol_pct": 27.626074639731215,
+      "gjr_vol_pct": 23.6981011897578
+    },
+    {
+      "shock_pct": 4.25,
+      "garch_vol_pct": 28.55126967404427,
+      "gjr_vol_pct": 24.240204207060636
+    },
+    {
+      "shock_pct": 4.5,
+      "garch_vol_pct": 29.50084744545485,
+      "gjr_vol_pct": 24.80221764278348
+    },
+    {
+      "shock_pct": 4.75,
+      "garch_vol_pct": 30.472528611849725,
+      "gjr_vol_pct": 25.382818992381445
+    },
+    {
+      "shock_pct": 5.0,
+      "garch_vol_pct": 31.46426544510455,
+      "gjr_vol_pct": 25.980762113533164
+    }
+  ]
+}
